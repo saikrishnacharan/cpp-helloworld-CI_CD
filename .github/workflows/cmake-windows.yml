@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
@@ -24,7 +24,22 @@ jobs:
       run: ./HelloWorld.exe
       
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: HelloWorld-windows
         path: ${{github.workspace}}/build/Release/HelloWorld.exe
+
+  download:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: HelloWorld-windows
+        path: downloaded-artifact
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: downloaded-artifact
